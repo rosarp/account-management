@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
-import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Data
@@ -26,8 +25,7 @@ public class Account {
   }
 
   @JsonCreator
-  public Account(@JsonProperty("accountId") String accountId,
-    @JsonProperty("balance") BigDecimal balance) {
+  public Account(@JsonProperty("accountId") String accountId, @JsonProperty("balance") BigDecimal balance) {
     this.accountId = accountId;
     this.balance = balance;
   }
