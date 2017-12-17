@@ -2,6 +2,7 @@ package com.db.awmd.challenge.domain;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -10,6 +11,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
+
+/**
+ * Money Transfer object used to transfer money from one account to other.
+ * 
+ * @author rosarp
+ *
+ */
 
 @Data
 public class MoneyTransfer {
@@ -22,6 +30,7 @@ public class MoneyTransfer {
   private final String accountTo;
 
   @NotNull
+  @Min(value = 0, message = "Initial balance must be positive.")
   private BigDecimal amount;
 
   @JsonCreator
