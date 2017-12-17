@@ -2,6 +2,7 @@
 Simple REST service with very basic functionality to manage accounts and its balance.
 
 URL :
+	
 	http://localhost:18080
 
 End Points :
@@ -15,6 +16,7 @@ End Points :
 		/v1/money-transfer
 
 TODO:
+	
 	To handle generic/common errors properly.
 	To cover business scenarios & all test scenarios, cucumber feature files to be added.
 	To add basic UI to test existing functionality.
