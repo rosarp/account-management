@@ -8,7 +8,11 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +39,12 @@ public class MoneyTransferControllerTest {
   @Autowired
   private WebApplicationContext webApplicationContext;
 
-  private ExecutorService executor = Executors.newFixedThreadPool(10);
+  private static ExecutorService executor;
+
+  @BeforeClass
+  public static void setUpBeforeClass() throws Exception {
+    executor = Executors.newFixedThreadPool(10);
+  }
 
   @Before
   public void prepareMockMvc() {
@@ -43,6 +52,15 @@ public class MoneyTransferControllerTest {
 
     // Reset the existing accounts before each test.
     moneyTransferService.getAccountsRepository().clearAccounts();
+  }
+
+  @After
+  public void tearDown() throws Exception {
+  }
+
+  @AfterClass
+  public static void tearDownAfterClass() throws Exception {
+    executor.shutdown();
   }
 
   private void createAccount(final String content) throws Exception {

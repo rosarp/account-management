@@ -2,16 +2,12 @@ package com.db.awmd.challenge;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
-
 import com.db.awmd.challenge.domain.Account;
 import com.db.awmd.challenge.exception.AccountDoesNotExistException;
-import com.db.awmd.challenge.exception.DuplicateAccountIdException;
 import com.db.awmd.challenge.exception.FromAndToSameAccountException;
 import com.db.awmd.challenge.exception.OperationTimeoutException;
 import com.db.awmd.challenge.exception.OverdraftException;
 import com.db.awmd.challenge.repository.AccountsRepository;
-import com.db.awmd.challenge.service.AccountsService;
 import com.db.awmd.challenge.service.MoneyTransferService;
 
 import java.math.BigDecimal;
@@ -20,9 +16,10 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeoutException;
-
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,12 +36,26 @@ public class MoneyTransferServiceTest {
   @Autowired
   private MoneyTransferService moneyTransferService;
 
-  private ExecutorService executor = Executors.newFixedThreadPool(1000);
+  private static ExecutorService executor;
+
+  @BeforeClass
+  public static void setUpBeforeClass() throws Exception {
+    executor = Executors.newFixedThreadPool(1000);
+  }
 
   @Before
   public void prepareMockMvc() {
     // Reset the existing accounts before each test.
     accountsRepository.clearAccounts();
+  }
+
+  @After
+  public void tearDown() throws Exception {
+  }
+
+  @AfterClass
+  public static void tearDownAfterClass() throws Exception {
+    executor.shutdown();
   }
 
   private void createAccount(final String accountId, final BigDecimal balance) {
