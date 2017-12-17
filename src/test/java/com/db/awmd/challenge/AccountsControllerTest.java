@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+import static org.hamcrest.Matchers.containsString;
 
 import com.db.awmd.challenge.domain.Account;
 import com.db.awmd.challenge.service.AccountsService;
@@ -45,7 +46,7 @@ public class AccountsControllerTest {
   @Test
   public void createAccount() throws Exception {
     this.mockMvc.perform(post("/v1/accounts").contentType(MediaType.APPLICATION_JSON)
-      .content("{\"accountId\":\"Id-123\",\"balance\":1000}")).andExpect(status().isCreated());
+        .content("{\"accountId\":\"Id-123\",\"balance\":1000}")).andExpect(status().isCreated());
 
     Account account = accountsService.getAccount("Id-123");
     assertThat(account.getAccountId()).isEqualTo("Id-123");
@@ -55,40 +56,42 @@ public class AccountsControllerTest {
   @Test
   public void createDuplicateAccount() throws Exception {
     this.mockMvc.perform(post("/v1/accounts").contentType(MediaType.APPLICATION_JSON)
-      .content("{\"accountId\":\"Id-123\",\"balance\":1000}")).andExpect(status().isCreated());
+        .content("{\"accountId\":\"Id-123\",\"balance\":1000}")).andExpect(status().isCreated());
 
     this.mockMvc.perform(post("/v1/accounts").contentType(MediaType.APPLICATION_JSON)
-      .content("{\"accountId\":\"Id-123\",\"balance\":1000}")).andExpect(status().isBadRequest());
+        .content("{\"accountId\":\"Id-123\",\"balance\":1000}")).andExpect(status().isBadRequest());
   }
 
   @Test
   public void createAccountNoAccountId() throws Exception {
-    this.mockMvc.perform(post("/v1/accounts").contentType(MediaType.APPLICATION_JSON)
-      .content("{\"balance\":1000}")).andExpect(status().isBadRequest());
+    this.mockMvc.perform(post("/v1/accounts").contentType(MediaType.APPLICATION_JSON).content("{\"balance\":1000}"))
+        .andExpect(status().isBadRequest());
   }
 
   @Test
   public void createAccountNoBalance() throws Exception {
-    this.mockMvc.perform(post("/v1/accounts").contentType(MediaType.APPLICATION_JSON)
-      .content("{\"accountId\":\"Id-123\"}")).andExpect(status().isBadRequest());
+    this.mockMvc
+        .perform(post("/v1/accounts").contentType(MediaType.APPLICATION_JSON).content("{\"accountId\":\"Id-123\"}"))
+        .andExpect(status().isBadRequest());
   }
 
   @Test
   public void createAccountNoBody() throws Exception {
     this.mockMvc.perform(post("/v1/accounts").contentType(MediaType.APPLICATION_JSON))
-      .andExpect(status().isBadRequest());
+        .andExpect(status().isBadRequest());
   }
 
   @Test
   public void createAccountNegativeBalance() throws Exception {
     this.mockMvc.perform(post("/v1/accounts").contentType(MediaType.APPLICATION_JSON)
-      .content("{\"accountId\":\"Id-123\",\"balance\":-1000}")).andExpect(status().isBadRequest());
+        .content("{\"accountId\":\"Id-123\",\"balance\":-1000}")).andExpect(status().isBadRequest());
   }
 
   @Test
   public void createAccountEmptyAccountId() throws Exception {
-    this.mockMvc.perform(post("/v1/accounts").contentType(MediaType.APPLICATION_JSON)
-      .content("{\"accountId\":\"\",\"balance\":1000}")).andExpect(status().isBadRequest());
+    this.mockMvc.perform(
+        post("/v1/accounts").contentType(MediaType.APPLICATION_JSON).content("{\"accountId\":\"\",\"balance\":1000}"))
+        .andExpect(status().isBadRequest());
   }
 
   @Test
@@ -96,9 +99,16 @@ public class AccountsControllerTest {
     String uniqueAccountId = "Id-" + System.currentTimeMillis();
     Account account = new Account(uniqueAccountId, new BigDecimal("123.45"));
     this.accountsService.createAccount(account);
-    this.mockMvc.perform(get("/v1/accounts/" + uniqueAccountId))
-      .andExpect(status().isOk())
-      .andExpect(
-        content().string("{\"accountId\":\"" + uniqueAccountId + "\",\"balance\":123.45}"));
+    this.mockMvc.perform(get("/v1/accounts/" + uniqueAccountId)).andExpect(status().isOk())
+        .andExpect(content().string(containsString("\"accountId\":\"" + uniqueAccountId)))
+        .andExpect(content().string(containsString("\"balance\":123.45")))
+        .andExpect(content().string(containsString("\"reentrantReadWriteLock\":")))
+        .andExpect(content().string(containsString("\"readLockCount\":0")))
+        .andExpect(content().string(containsString("\"readHoldCount\":0")))
+        .andExpect(content().string(containsString("\"writeLocked\":false")))
+        .andExpect(content().string(containsString("\"writeLockedByCurrentThread\":false")))
+        .andExpect(content().string(containsString("\"writeHoldCount\":0")))
+        .andExpect(content().string(containsString("\"fair\":true")))
+        .andExpect(content().string(containsString("\"queueLength\":0")));
   }
 }
