@@ -1,5 +1,13 @@
 package com.db.awmd.challenge.exception;
 
+/**
+ * This RuntimeException is thrown when money is being transferred from & to the
+ * same account. This should not be allowed, as it will always fail due to lock
+ * on accounts, in multi-threading.
+ * 
+ * @author rosarp
+ *
+ */
 public class FromAndToSameAccountException extends RuntimeException {
 
   /**

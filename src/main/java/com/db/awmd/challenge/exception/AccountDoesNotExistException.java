@@ -1,5 +1,12 @@
 package com.db.awmd.challenge.exception;
 
+/**
+ * This RuntimeException is thrown when amount is transferred from or to the non
+ * existent account.
+ * 
+ * @author rosarp
+ *
+ */
 public class AccountDoesNotExistException extends RuntimeException {
 
   /**

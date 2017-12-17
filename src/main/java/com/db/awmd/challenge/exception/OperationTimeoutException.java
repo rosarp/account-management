@@ -1,5 +1,13 @@
 package com.db.awmd.challenge.exception;
 
+/**
+ * This RuntimeException is thrown when due to account being locked for more
+ * than wait time defined by this application, tryLock method might fail due to
+ * very busy server.
+ * 
+ * @author rosarp
+ *
+ */
 public class OperationTimeoutException extends RuntimeException {
 
   /**
