@@ -144,7 +144,7 @@ public class MoneyTransferServiceTest {
       }
     }
     if (!success) {
-      fail("Should have failed when adding duplicate account");
+      fail("Should have timed out with very very busy server.");
     }
 
   }
