@@ -61,8 +61,10 @@ public class MoneyTransferService {
       // in any case, unlock the accounts
       try {
         if (accountFrom.tryWriteLock() && accountTo.tryWriteLock()) {
+          // withdraw will throw exception in case of Overdraft
           accountFrom.withdraw(amount);
           accountTo.deposit(amount);
+
           return;
         }
       } finally {
@@ -70,6 +72,7 @@ public class MoneyTransferService {
         accountFrom.writeUnlock();
       }
 
+      // Try again in sometime.
       try {
         Thread.sleep(SLEEP_DELAY);
       } catch (InterruptedException te) {

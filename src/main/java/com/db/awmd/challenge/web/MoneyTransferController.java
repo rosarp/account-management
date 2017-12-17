@@ -16,6 +16,8 @@ import com.db.awmd.challenge.exception.AccountDoesNotExistException;
 import com.db.awmd.challenge.exception.FromAndToSameAccountException;
 import com.db.awmd.challenge.exception.OperationTimeoutException;
 import com.db.awmd.challenge.exception.OverdraftException;
+import com.db.awmd.challenge.service.AccountsService;
+import com.db.awmd.challenge.service.EmailNotificationService;
 import com.db.awmd.challenge.service.MoneyTransferService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -25,11 +27,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MoneyTransferController {
 
+  private final AccountsService accountsService;
+
   private final MoneyTransferService moneyTransferService;
 
+  private final EmailNotificationService emailNotificationService;
+
   @Autowired
-  public MoneyTransferController(MoneyTransferService moneyTransferService) {
+  public MoneyTransferController(AccountsService accountsService, MoneyTransferService moneyTransferService,
+      EmailNotificationService emailNotificationService) {
+    this.accountsService = accountsService;
     this.moneyTransferService = moneyTransferService;
+    this.emailNotificationService = emailNotificationService;
   }
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -40,6 +49,15 @@ public class MoneyTransferController {
     try {
       moneyTransferService.moneyTransfer(moneyTransfer.getAccountFrom(), moneyTransfer.getAccountTo(),
           moneyTransfer.getAmount());
+
+      // Success, if no exception occurred. Then send notification.
+      emailNotificationService.notifyAboutTransfer(accountsService.getAccount(moneyTransfer.getAccountFrom()),
+          "Amount " + moneyTransfer.getAmount().toString() + " has been transferred to Account Id "
+              + moneyTransfer.getAccountTo());
+      emailNotificationService.notifyAboutTransfer(accountsService.getAccount(moneyTransfer.getAccountTo()),
+          "Amount " + moneyTransfer.getAmount().toString() + " has been received from Account Id "
+              + moneyTransfer.getAccountFrom());
+
     } catch (FromAndToSameAccountException | AccountDoesNotExistException | OperationTimeoutException
         | OverdraftException ode) {
       return new ResponseEntity<>(ode.getMessage(), HttpStatus.BAD_REQUEST);
