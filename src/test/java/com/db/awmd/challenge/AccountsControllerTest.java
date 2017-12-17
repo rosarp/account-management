@@ -100,15 +100,6 @@ public class AccountsControllerTest {
     Account account = new Account(uniqueAccountId, new BigDecimal("123.45"));
     this.accountsService.createAccount(account);
     this.mockMvc.perform(get("/v1/accounts/" + uniqueAccountId)).andExpect(status().isOk())
-        .andExpect(content().string(containsString("\"accountId\":\"" + uniqueAccountId)))
-        .andExpect(content().string(containsString("\"balance\":123.45")))
-        .andExpect(content().string(containsString("\"reentrantReadWriteLock\":")))
-        .andExpect(content().string(containsString("\"readLockCount\":0")))
-        .andExpect(content().string(containsString("\"readHoldCount\":0")))
-        .andExpect(content().string(containsString("\"writeLocked\":false")))
-        .andExpect(content().string(containsString("\"writeLockedByCurrentThread\":false")))
-        .andExpect(content().string(containsString("\"writeHoldCount\":0")))
-        .andExpect(content().string(containsString("\"fair\":true")))
-        .andExpect(content().string(containsString("\"queueLength\":0")));
+        .andExpect(content().string("{\"accountId\":\"" + uniqueAccountId + "\",\"balance\":123.45}"));
   }
 }

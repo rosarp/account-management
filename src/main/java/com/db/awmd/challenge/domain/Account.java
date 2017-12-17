@@ -9,14 +9,18 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.AccessLevel;
+
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Data
 public class Account {
 
   // Threads will contend for entry using an approximately arrival-order policy
-  @Autowired
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
   private final ReentrantReadWriteLock reentrantReadWriteLock = new ReentrantReadWriteLock(true);
 
   @NotNull
