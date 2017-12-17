@@ -60,6 +60,7 @@ public class MoneyTransferController {
 
     } catch (FromAndToSameAccountException | AccountDoesNotExistException | OperationTimeoutException
         | OverdraftException ode) {
+      log.info(ode.getMessage());
       return new ResponseEntity<>(ode.getMessage(), HttpStatus.BAD_REQUEST);
     }
     return new ResponseEntity<>(HttpStatus.CREATED);
