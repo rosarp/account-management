@@ -17,8 +17,8 @@ import com.db.awmd.challenge.exception.FromAndToSameAccountException;
 import com.db.awmd.challenge.exception.OperationTimeoutException;
 import com.db.awmd.challenge.exception.OverdraftException;
 import com.db.awmd.challenge.service.AccountsService;
-import com.db.awmd.challenge.service.EmailNotificationService;
 import com.db.awmd.challenge.service.MoneyTransferService;
+import com.db.awmd.challenge.service.NotificationService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,14 +31,14 @@ public class MoneyTransferController {
 
   private final MoneyTransferService moneyTransferService;
 
-  private final EmailNotificationService emailNotificationService;
+  private final NotificationService notificationService;
 
   @Autowired
   public MoneyTransferController(AccountsService accountsService, MoneyTransferService moneyTransferService,
-      EmailNotificationService emailNotificationService) {
+      NotificationService emailNotificationService) {
     this.accountsService = accountsService;
     this.moneyTransferService = moneyTransferService;
-    this.emailNotificationService = emailNotificationService;
+    this.notificationService = emailNotificationService;
   }
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -51,10 +51,10 @@ public class MoneyTransferController {
           moneyTransfer.getAmount());
 
       // Success, if no exception occurred. Then send notification.
-      emailNotificationService.notifyAboutTransfer(accountsService.getAccount(moneyTransfer.getAccountFrom()),
+      notificationService.notifyAboutTransfer(accountsService.getAccount(moneyTransfer.getAccountFrom()),
           "Amount " + moneyTransfer.getAmount().toString() + " has been transferred to Account Id "
               + moneyTransfer.getAccountTo());
-      emailNotificationService.notifyAboutTransfer(accountsService.getAccount(moneyTransfer.getAccountTo()),
+      notificationService.notifyAboutTransfer(accountsService.getAccount(moneyTransfer.getAccountTo()),
           "Amount " + moneyTransfer.getAmount().toString() + " has been received from Account Id "
               + moneyTransfer.getAccountFrom());
 
