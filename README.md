@@ -19,10 +19,23 @@
 ###### 1.
 ```
 /v1/accounts
+
+e.g. payload
+{
+	"accountId" : "Id-123",
+	"balance" : 2000
+}
 ```
 ###### 2.
 ```
 /v1/money-transfer
+
+e.g. payload
+{
+	"accountFrom" : "Id-123",
+	"accountTo" : "Id-234",
+	"amount" : 300
+}
 ```
 
 ### How to get production ready:
