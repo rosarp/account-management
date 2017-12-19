@@ -26,7 +26,11 @@
 ```
 
 ### How to get production ready:
+
+##### ToDo:
+
 ```
+Use real database such as postgresql instead of in memory db/map/list functionality.
 Handle generic/common errors properly.
 Cover business scenarios & all test scenarios using cucumber feature files.
 Add mutation coverage.
@@ -34,6 +38,12 @@ Add basic UI to test existing functionality.
 Add actuators for production server health monitoring.
 Add spring security & user management
 ```
+
+##### Where to find application jar:
+Sometimes, you don't want to build application yourself.
+
+So, you can find the application jar under [github releases](https://github.com/rosarp/account-management/releases) section.
+
 ##### Download and prepare source code:
 Required files to compile the application are bundled with this source code.
 
@@ -60,11 +70,6 @@ $./gradlew clean
 $./gradlew build
 $./gradlew bootRepackage
 ```
-
-##### Where to find application jar:
-Sometimes, you don't want to build application yourself.
-
-So, you can find the application jar under [github releases](https://github.com/rosarp/account-management/releases) section.
 
 ##### How to run the server:
 
