@@ -45,11 +45,13 @@ e.g. payload
 ```
 Use real database such as postgresql instead of in memory db/map/list functionality.
 Handle generic/common errors properly.
+Add spring security & user management
 Cover business scenarios & all test scenarios using cucumber feature files.
 Add mutation coverage.
-Add basic UI to test existing functionality.
 Add actuators for production server health monitoring.
-Add spring security & user management
+Add basic UI to test existing functionality.
+Setup CI server.
+Setup test & prod server.
 ```
 
 ##### Where to find application jar:
