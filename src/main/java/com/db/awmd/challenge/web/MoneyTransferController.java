@@ -50,7 +50,8 @@ public class MoneyTransferController {
       moneyTransferService.moneyTransfer(moneyTransfer.getAccountFrom(), moneyTransfer.getAccountTo(),
           moneyTransfer.getAmount());
 
-      // Success, if no exception occurred. Then send notification.
+      // If no exception occurred, that means success.
+      // Then send notification to both account holders.
       notificationService.notifyAboutTransfer(accountsService.getAccount(moneyTransfer.getAccountFrom()),
           "Amount " + moneyTransfer.getAmount().toString() + " has been transferred to Account Id "
               + moneyTransfer.getAccountTo());

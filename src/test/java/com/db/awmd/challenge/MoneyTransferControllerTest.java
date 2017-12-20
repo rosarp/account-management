@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+import static org.mockito.Mockito.anyObject;
+import static org.mockito.Mockito.doNothing;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -17,6 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -25,6 +28,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.db.awmd.challenge.domain.Account;
 import com.db.awmd.challenge.service.MoneyTransferService;
+import com.db.awmd.challenge.service.NotificationService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -32,6 +36,9 @@ import com.db.awmd.challenge.service.MoneyTransferService;
 public class MoneyTransferControllerTest {
 
   private MockMvc mockMvc;
+  
+  @MockBean
+  private NotificationService notificationService;
 
   @Autowired
   private MoneyTransferService moneyTransferService;
@@ -52,6 +59,7 @@ public class MoneyTransferControllerTest {
 
     // Reset the existing accounts before each test.
     moneyTransferService.getAccountsRepository().clearAccounts();
+    doNothing().when(notificationService).notifyAboutTransfer(anyObject(), anyObject());
   }
 
   @After
