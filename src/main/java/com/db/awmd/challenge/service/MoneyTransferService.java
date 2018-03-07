@@ -59,8 +59,10 @@ public class MoneyTransferService {
 
     while (true) {
       // in any case, unlock the accounts
+      // always tryWriteLock on lowest accountId first
       try {
-        if (accountFrom.tryWriteLock() && accountTo.tryWriteLock()) {
+        if ((accountFromId.compareTo(accountToId) == -1 && accountFrom.tryWriteLock() && accountTo.tryWriteLock())
+            || (accountFromId.compareTo(accountToId) == 1 && accountTo.tryWriteLock() && accountFrom.tryWriteLock())) {
           // withdraw will throw exception in case of Overdraft
           accountFrom.withdraw(amount);
           accountTo.deposit(amount);
